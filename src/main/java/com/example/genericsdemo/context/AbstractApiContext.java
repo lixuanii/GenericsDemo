@@ -25,7 +25,6 @@ import java.util.Set;
 @Component
 public abstract class AbstractApiContext implements IApiService {
 
-    private static final Validator VALIDATOR = SpringUtil.getBean(Validator.class);
 
     public static <T> Result<? extends BaseVo> openApi(T dto) {
         try {
@@ -67,11 +66,9 @@ public abstract class AbstractApiContext implements IApiService {
     }
 
 
-    /***
-     * 提取到第N个.之前的部分
-     * @param: type
-     * @param: nthDot
-     * @return:
+    /**
+     * @param type 类型
+     * @return 具体实例
      * @date: 2024/5/15 16:15
      */
     private static String extractPrefix(String type) {
@@ -95,7 +92,7 @@ public abstract class AbstractApiContext implements IApiService {
      * @return 验证结果
      */
     private static <T extends BaseDto> Result<BaseVo> validatorParams(T baseDto) {
-        Set<ConstraintViolation<T>> violationSet = VALIDATOR.validate(baseDto);
+        Set<ConstraintViolation<T>> violationSet = SpringUtil.getBean(Validator.class).validate(baseDto);
         //验证不通过
         if (!violationSet.isEmpty()) {
             StringBuilder sb = new StringBuilder();
